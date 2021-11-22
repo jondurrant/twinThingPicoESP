@@ -105,4 +105,30 @@ void  MQTTTopicHelper::genGroupTopic(char * topic, const char *grp, const char *
 			);
 }
 
+/***
+ * Topic length of update topics published by thing
+ * @param id of thing
+ * @return
+ */
+size_t MQTTTopicHelper::legThingUpdate(const char *id){
+	size_t res = 0;
+	res =   strlen(MQTT_TOPIC_THING_HEADER) +
+			strlen(id) +
+			strlen(MQTT_STATE_TOPIC) +
+			strlen(MQTT_STATE_TOPIC_UPDATE) +
+			5;
+	return res;
+}
+
+/***
+ * Generate update topic for thing
+ * @param topic - output to write to
+ * @param id - Id of thing
+ */
+void MQTTTopicHelper::getThingUpdate(char *topic, const char *id){
+	sprintf(topic, "%s/%s/%s/%s", MQTT_TOPIC_THING_HEADER, id,
+			MQTT_STATE_TOPIC, MQTT_STATE_TOPIC_UPDATE
+			);
+}
+
 

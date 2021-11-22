@@ -32,6 +32,13 @@
 #define MQTT_TOPIC_LIFECYCLE_KEEP_ALIVE "KEEP"
 #endif
 
+#ifndef MQTT_STATE_TOPIC
+#define MQTT_STATE_TOPIC "STATE"
+#endif
+#ifndef MQTT_STATE_TOPIC_UPDATE
+#define MQTT_STATE_TOPIC_UPDATE "UPD"
+#endif
+
 
 #include <stdlib.h>
 
@@ -93,6 +100,23 @@ public:
 	 * @param name - string name of the topic
 	 */
 	static void genGroupTopic(char * topic, const char *grp, const char *name);
+
+
+	/***
+	 * Topic length of update topics published by thing
+	 * @param id of thing
+	 * @return
+	 */
+	static size_t legThingUpdate(const char *id);
+
+	/***
+	 * Generate update topic for thing
+	 * @param topic - output to write to
+	 * @param id - Id of thing
+	 */
+	static void getThingUpdate(char *topic, const char *id);
+
+
 };
 
 #endif /* MQTTTOPICHELPER_H_ */

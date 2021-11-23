@@ -140,7 +140,7 @@ bool MQTTAgent::connect(char * target, lwesp_port_t  port, bool recon){
 	this->target = target;
 	this->port = port;
 	this->recon = recon;
-	connState = MQTTConn;
+	setConnState(MQTTConn);
 	return true;
 }
 
@@ -194,12 +194,12 @@ void MQTTAgent::start(UBaseType_t priority){
 		 case MQTTConned: {
 			 pubToTopic(onlineTopic, ONLINEPAYLOAD, strlen(ONLINEPAYLOAD), 1);
 			 mqttSub();
-			 connState = Online;
+			 setConnState(Online);
 			 break;
 		 }
 		 case MQTTRecon: {
 			 vTaskDelay(MQTT_RECON_DELAY);
-			 connState = MQTTConn;
+			 setConnState(MQTTConn);
 			 break;
 		 }
 		 case Online: {
@@ -259,6 +259,10 @@ bool MQTTAgent::pubToTopic(const char * topic, const void * payload,
 	}
 	}
 	LogDebug( ("Publish to: %s \n", topic ));
+
+	if (pObserver != NULL){
+		pObserver->MQTTSend();
+	}
 	status = lwesp_mqtt_client_api_publish(pMQTTClient, topic,
 			payload, payloadLen, q, false);
 	return (status == lwespOK);
@@ -268,7 +272,7 @@ bool MQTTAgent::pubToTopic(const char * topic, const void * payload,
 * Close connection
 */
 void MQTTAgent::close(){
-	connState = Offline;
+	setConnState(Offline);
 	lwesp_mqtt_client_api_close( pMQTTClient);
 }
 
@@ -280,6 +284,10 @@ void MQTTAgent::close(){
 * @param payloadLen - payload length
 */
 void MQTTAgent::route(const char * topic, size_t topicLen, const void * payload, size_t payloadLen){
+	if (pObserver != NULL){
+		pObserver->MQTTRecv();
+	}
+
 	if (pRouter != NULL){
 		pRouter->route(topic, topicLen, payload, payloadLen, this);
 	}
@@ -321,14 +329,14 @@ bool MQTTAgent::mqttConn(){
 	conn_status = lwesp_mqtt_client_api_connect(pMQTTClient,
 			target, port, &xMqttClientInfo);
 	if (conn_status == LWESP_MQTT_CONN_STATUS_ACCEPTED) {
-		connState = MQTTConned;
+		setConnState(MQTTConned);
 		LogDebug( ("Connected and accepted!\r\n") );
 	} else {
-		connState = Offline;
+		setConnState(Offline);
 		//printf("MQTT Connect Failed: %d\r\n", (int)conn_status);
 		LogError( ("MQTT Connect Failed %d\n", (int)conn_status ));
 		if (recon){
-			connState = MQTTRecon;
+			setConnState(MQTTRecon);
 		}
 		return false;
 	}
@@ -394,8 +402,8 @@ bool MQTTAgent::mqttRec(){
 	if (res == lwespOK) {
 		if (buf != NULL) {
 			//printf("Topic: %s, payload: %s\r\n", buf->topic, buf->payload);
-			pRouter->route(buf->topic, buf->topic_len,
-					buf->payload, buf->payload_len, this );
+			route(buf->topic, buf->topic_len,
+					buf->payload, buf->payload_len );
 			lwesp_mqtt_client_api_buf_free(buf);
 			buf = NULL;
 		}
@@ -403,9 +411,9 @@ bool MQTTAgent::mqttRec(){
 		LogWarn( ("MQTT connection closed!\r\n") );
 		if (recon){
 			LogDebug( ("Reconnect") );
-			connState = MQTTRecon;
+			setConnState(MQTTRecon);
 		} else {
-			connState = Offline;
+			setConnState(Offline);
 		}
 		return false;
 	} else if (res == lwespTIMEOUT) {
@@ -413,6 +421,38 @@ bool MQTTAgent::mqttRec(){
 		pubToTopic(keepAliveTopic, ONLINEPAYLOAD, strlen(ONLINEPAYLOAD), 1);
 	}
 	return true;
+}
+
+/***
+ * Set the connection state variable
+ * @param s
+ */
+void MQTTAgent::setConnState(MQTTState s){
+	connState = s;
+
+	if (pObserver != NULL){
+		switch(connState){
+		case Offline:{
+			pObserver->MQTTOffline();
+			break;
+		}
+		case Online:{
+			pObserver->MQTTOnline();
+			break;
+		}
+		default:{
+			;
+		}
+		}
+	}
+}
+
+/***
+ * Set a single observer to get call back on state changes
+ * @param obs
+ */
+void MQTTAgent::setObserver(MQTTAgentObserver *obs){
+	pObserver = obs;
 }
 
 

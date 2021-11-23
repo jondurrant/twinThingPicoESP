@@ -15,6 +15,7 @@
 #include "MQTTConfig.h"
 #include "MQTTInterface.h"
 #include "MQTTRouter.h"
+#include "MQTTAgentObserver.h"
 
 
 #ifndef MQTT_RECON_DELAY
@@ -126,6 +127,12 @@ public:
 	virtual bool subToTopic(const char * topic, const uint8_t QoS=0);
 
 
+	/***
+	 * Set a single observer to get call back on state changes
+	 * @param obs
+	 */
+	virtual void setObserver(MQTTAgentObserver *obs);
+
 private:
 	/***
 	 * Task object running to manage MQTT interface
@@ -162,6 +169,12 @@ private:
 	 */
 	bool mqttRec();
 
+	/***
+	 * Set the connection state variable
+	 * @param s
+	 */
+	void setConnState(MQTTState s);
+
 	//MQTT Server details
 	const char * user;
 	const char * passwd;
@@ -193,7 +206,8 @@ private:
 	size_t xRxBufSize;
 	size_t xTxBufSize;
 
-
+	//Single Observer
+	MQTTAgentObserver *pObserver = NULL;
 
 };
 

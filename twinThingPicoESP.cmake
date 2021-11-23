@@ -19,7 +19,7 @@ target_sources(twinThingPicoESP INTERFACE
     ${CMAKE_CURRENT_LIST_DIR}/src/StateTemp.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/TwinTask.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/MQTTRouterTwin.cpp
-
+	${CMAKE_CURRENT_LIST_DIR}/src/MQTTAgentObserver.cpp
 )
 
 # Add include directory

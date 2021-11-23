@@ -38,14 +38,14 @@ public:
 	 * have been processed by pico
 	 * @param newTRN
 	 */
-	void setTransaction(unsigned int newTRN);
+	virtual void setTransaction(unsigned int newTRN);
 
 	/***
 	 * get transaction code. Used by twin client on a host to confirm updates
 	 * have been processed by pico
 	 * @return trn
 	 */
-	unsigned int getTransaction();
+	virtual unsigned int getTransaction();
 
 	/***
 	 * Retrieve delta of changes to state in JSON format
@@ -53,7 +53,7 @@ public:
 	 * @param len - length of buffer
 	 * @return length of json or zero if we ran out of space
 	 */
-	unsigned int delta(char *buf, unsigned int len) ;
+	virtual unsigned int delta(char *buf, unsigned int len) ;
 
 	/***
 	 * Retrieve delta of changes to state in JSON format
@@ -62,7 +62,7 @@ public:
 	 * @param dirtyCode - dirtyCode which shows which elements changed.
 	 * @return
 	 */
-	unsigned int delta(char *buf, unsigned int len, unsigned char dirtyCode) ;
+	virtual unsigned int delta(char *buf, unsigned int len, unsigned char dirtyCode) ;
 
 	/***
 	 * Retrieve state of object in JSON format
@@ -70,7 +70,7 @@ public:
 	 * @param len - length of buffer
 	 * @return length of json or zero if we ran out of space
 	 */
-	unsigned int state(char *buf, unsigned int len) ;
+	virtual unsigned int state(char *buf, unsigned int len) ;
 
 	/***
 	 * Update state data from a json structure
@@ -81,23 +81,23 @@ public:
 	/***
 	 * Start a transaction and supress notifications of change until transaction is complete
 	 */
-	void startTransaction();
+	virtual void startTransaction();
 
 	/***
 	 * End transaction and notify all observers
 	 */
-	void commitTransaction();
+	virtual void commitTransaction();
 
 	/***
 	 * Set state to clean for delta
 	 */
-	void setClean();
+	virtual void setClean();
 
 	/***
 	 * Check if delta is currently available. Should be false except in transation
 	 * @return bool
 	 */
-	bool isDirty() const;
+	virtual bool isDirty() const;
 
 	/***
 	 * Attach an observer

@@ -23,7 +23,7 @@
 #define STATE_MSG_BUF_LEN 512
 #endif
 #ifndef STATE_MAX_MSG_LEN
-#define STATE_MAX_MSG_LEN 100
+#define STATE_MAX_MSG_LEN 200
 #endif
 
 class TwinTask : public StateObserver {

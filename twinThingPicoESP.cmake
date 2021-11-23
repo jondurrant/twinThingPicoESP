@@ -18,6 +18,7 @@ target_sources(twinThingPicoESP INTERFACE
     ${CMAKE_CURRENT_LIST_DIR}/src/StateObserver.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/StateTemp.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/TwinTask.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/MQTTRouterTwin.cpp
 
 )
 

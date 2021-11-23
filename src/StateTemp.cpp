@@ -11,7 +11,7 @@
 #include "hardware/adc.h"
 #include <stdio.h>
 #include <string.h>
-#include "json-maker.h"
+#include "json-maker/json-maker.h"
 
 #define TEMPSLOT 1
 #define BOOTSLOT 2

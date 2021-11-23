@@ -110,7 +110,7 @@ void  MQTTTopicHelper::genGroupTopic(char * topic, const char *grp, const char *
  * @param id of thing
  * @return
  */
-size_t MQTTTopicHelper::legThingUpdate(const char *id){
+size_t MQTTTopicHelper::lenThingUpdate(const char *id){
 	size_t res = 0;
 	res =   strlen(MQTT_TOPIC_THING_HEADER) +
 			strlen(id) +
@@ -130,5 +130,58 @@ void MQTTTopicHelper::getThingUpdate(char *topic, const char *id){
 			MQTT_STATE_TOPIC, MQTT_STATE_TOPIC_UPDATE
 			);
 }
+
+
+/***
+ * Topic length of get topics published by thing
+ * @param id of thing
+ * @return
+ */
+size_t MQTTTopicHelper::lenThingGet(const char *id){
+	size_t res = 0;
+	res =   strlen(MQTT_TOPIC_THING_HEADER) +
+			strlen(id) +
+			strlen(MQTT_STATE_TOPIC) +
+			strlen(MQTT_STATE_TOPIC_GET) +
+			5;
+	return res;
+}
+
+/***
+ * Generate get topic for thing
+ * @param topic - output to write to
+ * @param id - Id of thing
+ */
+ void MQTTTopicHelper::getThingGet(char *topic, const char *id){
+	 sprintf(topic, "%s/%s/%s/%s", MQTT_TOPIC_THING_HEADER, id,
+	 			MQTT_STATE_TOPIC, MQTT_STATE_TOPIC_GET
+	 			);
+ }
+
+/***
+ * Topic length of set topics published by thing
+ * @param id of thing
+ * @return
+ */
+ size_t MQTTTopicHelper::lenThingSet(const char *id){
+		size_t res = 0;
+		res =   strlen(MQTT_TOPIC_THING_HEADER) +
+				strlen(id) +
+				strlen(MQTT_STATE_TOPIC) +
+				strlen(MQTT_STATE_TOPIC_SET) +
+				5;
+		return res;
+	}
+
+/***
+ * Generate set topic for thing
+ * @param topic - output to write to
+ * @param id - Id of thing
+ */
+ void MQTTTopicHelper::getThingSet(char *topic, const char *id){
+	 sprintf(topic, "%s/%s/%s/%s", MQTT_TOPIC_THING_HEADER, id,
+	 			MQTT_STATE_TOPIC, MQTT_STATE_TOPIC_SET
+	 			);
+ }
 
 

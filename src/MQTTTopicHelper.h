@@ -38,6 +38,15 @@
 #ifndef MQTT_STATE_TOPIC_UPDATE
 #define MQTT_STATE_TOPIC_UPDATE "UPD"
 #endif
+#ifndef MQTT_STATE_TOPIC_GET
+#define MQTT_STATE_TOPIC_GET "GET"
+#endif
+#ifndef MQTT_STATE_TOPIC_SET
+#define MQTT_STATE_TOPIC_SET "SET"
+#endif
+#ifndef MQTT_STATE_PAYLOAD_GET
+#define MQTT_STATE_PAYLOAD_GET "{\"GET\":1}"
+#endif
 
 
 #include <stdlib.h>
@@ -107,7 +116,7 @@ public:
 	 * @param id of thing
 	 * @return
 	 */
-	static size_t legThingUpdate(const char *id);
+	static size_t lenThingUpdate(const char *id);
 
 	/***
 	 * Generate update topic for thing
@@ -115,6 +124,34 @@ public:
 	 * @param id - Id of thing
 	 */
 	static void getThingUpdate(char *topic, const char *id);
+
+	/***
+	 * Topic length of get topics published by thing
+	 * @param id of thing
+	 * @return
+	 */
+	static size_t lenThingGet(const char *id);
+
+	/***
+	 * Generate get topic for thing
+	 * @param topic - output to write to
+	 * @param id - Id of thing
+	 */
+	static void getThingGet(char *topic, const char *id);
+
+	/***
+	 * Topic length of set topics published by thing
+	 * @param id of thing
+	 * @return
+	 */
+	static size_t lenThingSet(const char *id);
+
+	/***
+	 * Generate set topic for thing
+	 * @param topic - output to write to
+	 * @param id - Id of thing
+	 */
+	static void getThingSet(char *topic, const char *id);
 
 
 };

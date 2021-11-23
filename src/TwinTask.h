@@ -15,6 +15,7 @@
 #include "StateObserver.h"
 #include <FreeRTOS.h>
 #include <message_buffer.h>
+#include <task.h>
 #include <stdlib.h>
 #include "tiny-json.h"
 
@@ -32,7 +33,7 @@ public:
 
 	void setStateObject(State *state);
 	void setMQTTInterface(MQTTInterface *mi);
-	bool addMessage(char * msg, size_t msgLen);
+	bool addMessage(const char * msg, size_t msgLen);
 
 	/***
 	 *  create the vtask, will get picked up by scheduler
@@ -82,8 +83,8 @@ private:
 	char * updateTopic = NULL;
 
 	//Json parsing structure buffer
-	json_t *jsonBuf = NULL;
-	unsigned int jsonBufLen = 0;
+	json_t jsonBuf[MQTT_JSON_BUF_NUM];
+	unsigned int jsonBufLen = MQTT_JSON_BUF_NUM;
 };
 
 #endif /* SRC_TWINTASK_H_ */

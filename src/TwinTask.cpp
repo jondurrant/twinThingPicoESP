@@ -6,6 +6,8 @@
  */
 
 #include "TwinTask.h"
+#include "MQTTTopicHelper.h"
+#include "TwinProtocol.h"
 #include <cstring>
 
 TwinTask::TwinTask() {
@@ -32,21 +34,21 @@ void TwinTask::setMQTTInterface(MQTTInterface *mi){
 	mqttInterface = mi;
 	if (updateTopic == NULL){
 		updateTopic = (char *)pvPortMalloc(
-				MQTTTopicHelper::legThingUpdate(mi->getId())
+				MQTTTopicHelper::lenThingUpdate(mi->getId())
 				);
 		if (updateTopic != NULL){
-			MQTTTopicHelper::getThingUpdate(updateTopic, this->getId());
+			MQTTTopicHelper::getThingUpdate(updateTopic, mi->getId());
 		} else {
 			LogError( ("Allocated failed") );
 		}
 	}
 }
 
-void TwinTask::addMessage(char * msg, size_t msgLen){
+bool TwinTask::addMessage(const char * msg, size_t msgLen){
 	if (xMessageBuffer != NULL){
 		size_t res = xMessageBufferSend(xMessageBuffer,
 					msg, msgLen, 0 );
-			if (res != payloadLen){
+			if (res != msgLen){
 				LogError( ("addMessage failed\n") );
 				return false;
 			}
@@ -61,7 +63,7 @@ void TwinTask::addMessage(char * msg, size_t msgLen){
  *  create the vtask, will get picked up by scheduler
  *
  *  */
-void TwinTask::start(UBaseType_t priority = tskIDLE_PRIORITY){
+void TwinTask::start(UBaseType_t priority){
 	xMessageBuffer = xMessageBufferCreate( STATE_MSG_BUF_LEN );
 	if (xMessageBuffer == NULL){
 		LogError( ("Create buf failed") );
@@ -118,7 +120,7 @@ void TwinTask::run(){
 								xMsg, STATE_MAX_MSG_LEN, 0);
 			if (size > 0){
 				if (pState != NULL){
-					processJson(msg);
+					processJson(xMsg);
 				}
 			}
 		}
@@ -147,13 +149,23 @@ void TwinTask::processJson(char *str){
 		pState->updateFromJson(delta);
 		pState->commitTransaction();
 	}
+
+	//GET Processing
+	if (!delta){
+		delta = json_getProperty(json, MQTT_STATE_TOPIC_GET);
+		if (delta){
+			LogDebug(("Handling Get"));
+			pState->state(xMsg, STATE_MAX_MSG_LEN);
+			mqttInterface->pubToTopic(updateTopic, xMsg, strlen(xMsg), 1);
+		}
+	}
 }
 
 /***
  * Notification of a change of a state item with the State object.
  * @param dirtyCode - Representation of item changed within state. Used to pull back delta
  */
-void notifyState(unsigned char dirtyCode){
+void TwinTask::notifyState(unsigned char dirtyCode){
 	if (mqttInterface != NULL){
 		unsigned int i;
 
@@ -161,6 +173,6 @@ void notifyState(unsigned char dirtyCode){
 		if (i == 0){
 			LogError(("Buf overrun"));
 		}
-		mqttInterface->pubToTopic(updateTopic, xMsg, strLen(xMsg));
+		mqttInterface->pubToTopic(updateTopic, xMsg, strlen(xMsg));
 	}
 }

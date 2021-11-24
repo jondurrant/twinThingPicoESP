@@ -26,7 +26,7 @@ MQTTRouterTwin::~MQTTRouterTwin() {
 
 
 MQTTRouterTwin::MQTTRouterTwin(const char * id, MQTTInterface *mi, State *state){
-
+	init(id, mi, state);
 }
 
 /***

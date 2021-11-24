@@ -47,6 +47,9 @@
 
 #define LWESP_CFG_MODE_STATION		1
 
+#define LWESP_CFG_SMART				0
+#define LWESP_CFG_HOSTNAME			1
+
 
 
 /* Enable global debug */

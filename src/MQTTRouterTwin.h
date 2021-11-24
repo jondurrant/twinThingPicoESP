@@ -20,14 +20,20 @@ public:
 	MQTTRouterTwin();
 	virtual ~MQTTRouterTwin();
 
-	MQTTRouterTwin(const char * id, MQTTInterface *mi, State *state);
+	MQTTRouterTwin(const char * id, MQTTInterface *mi);
 
 	/***
 	 * Initialise the object give the Id and MQTT Interface
 	 * @param id = string ID of the Thing
 	 * @param mi = MQTT Interface
 	 */
-	virtual void init(const char * id, MQTTInterface *mi, State * state);
+	virtual void init(const char * id, MQTTInterface *mi);
+
+	/***
+	 * set the TwinTasl
+	 * @param state
+	 */
+	virtual void setTwin(TwinTask *twin);
 
 	/***
 	 * Use the interface to setup all the subscriptions
@@ -47,7 +53,7 @@ public:
 			size_t payloadLen, MQTTInterface *interface);
 
 private:
-	TwinTask xTwin;
+	TwinTask *pTwin;
 
 	char * pSetTopic = NULL;
 	char * pGetTopic = NULL;

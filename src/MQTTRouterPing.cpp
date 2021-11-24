@@ -37,7 +37,8 @@ MQTTRouterPing::MQTTRouterPing(const char * id, MQTTInterface *mi) {
  * @param mi = MQTT Interface
  */
 void MQTTRouterPing::init(const char * id, MQTTInterface *mi) {
-	this->id = id;
+	MQTTRouter::init(id, mi);
+
 
 	if (pingTopic == NULL){
 		pingTopic = (char *)pvPortMalloc(
@@ -60,11 +61,6 @@ void MQTTRouterPing::init(const char * id, MQTTInterface *mi) {
 			LogError( ("Unable to allocate PONG topic") );
 		}
 	}
-
-	pingTask.setPongTopic(pongTopic);
-	pingTask.setInterface(mi);
-	pingTask.start();
-
 }
 
 /***
@@ -94,13 +90,17 @@ void MQTTRouterPing::route(const char *topic, size_t topicLen, const void * payl
 
 	LogDebug( ("MQTTRouterPing(%.*s[%d]: %.*s[%d])\n",topicLen,
 			topic, topicLen, payloadLen, (char *)payload, payloadLen) );
+
+	if (pingTask == NULL){
+		return;
+	}
 	if (strlen(pingTopic) == topicLen){
 		if (memcmp(topic, pingTopic, topicLen)==0){
 
 			/*
 			interface->pubToTopic(pongTopic, payload, payloadLen);
 			*/
-			pingTask.addPing(payload, payloadLen);
+			pingTask->addPing(payload, payloadLen);
 		}
 	}
 }
@@ -113,4 +113,15 @@ void MQTTRouterPing::subscribe(MQTTInterface *interface){
 
 	interface->subToTopic(pingTopic, 1);
 }
+
+/***
+ * Set Task to use for action
+ * @param p
+ */
+void MQTTRouterPing::setPingTask(MQTTPingTask *p){
+	pingTask = p;
+	pingTask->setPongTopic(pongTopic);
+	pingTask->setInterface(pInterface);
+}
+
 

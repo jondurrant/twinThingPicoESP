@@ -25,8 +25,8 @@ MQTTRouterTwin::~MQTTRouterTwin() {
 }
 
 
-MQTTRouterTwin::MQTTRouterTwin(const char * id, MQTTInterface *mi, State *state){
-	init(id, mi, state);
+MQTTRouterTwin::MQTTRouterTwin(const char * id, MQTTInterface *mi){
+	init(id, mi);
 }
 
 /***
@@ -34,10 +34,8 @@ MQTTRouterTwin::MQTTRouterTwin(const char * id, MQTTInterface *mi, State *state)
  * @param id = string ID of the Thing
  * @param mi = MQTT Interface
  */
-void MQTTRouterTwin::init(const char * id, MQTTInterface *mi, State * state){
+void MQTTRouterTwin::init(const char * id, MQTTInterface *mi){
 	MQTTRouterPing::init(id, mi);
-	xTwin.setStateObject(state);
-	xTwin.setMQTTInterface(mi);
 
 	if (pSetTopic == NULL){
 		pSetTopic = (char *)pvPortMalloc(
@@ -60,9 +58,6 @@ void MQTTRouterTwin::init(const char * id, MQTTInterface *mi, State * state){
 			LogError( ("Unable to allocate topic") );
 		}
 	}
-
-	//TODO Priority configuration
-	xTwin.start();
 }
 
 /***
@@ -89,20 +84,33 @@ void MQTTRouterTwin::route(const char *topic, size_t topicLen, const void * payl
 		size_t payloadLen, MQTTInterface *interface){
 	MQTTRouterPing::route(topic, topicLen, payload, payloadLen, interface);
 
+	if (pTwin == NULL){
+		LogError(("Twin not defined"));
+		return;
+	}
+
 	if (strlen(pSetTopic) == topicLen){
 		if (memcmp(topic, pSetTopic, topicLen)==0){
 			LogDebug(("STATE SET"));
-			xTwin.addMessage((char *)payload, payloadLen);
+			pTwin->addMessage((char *)payload, payloadLen);
 		}
 	}
 	if (strlen(pGetTopic) == topicLen){
 		if (memcmp(topic, pGetTopic, topicLen)==0){
 			LogDebug(("STATE GET"));
-			xTwin.addMessage(MQTT_STATE_PAYLOAD_GET,
+			pTwin->addMessage(MQTT_STATE_PAYLOAD_GET,
 					strlen(MQTT_STATE_PAYLOAD_GET)
 					);
 		}
 	}
+}
 
+/***
+ * set the TwinTasl
+ * @param state
+ */
+void MQTTRouterTwin::setTwin(TwinTask *twin){
+	pTwin = twin;
+	pTwin->setMQTTInterface(pInterface);
 }
 

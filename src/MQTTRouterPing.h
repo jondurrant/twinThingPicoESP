@@ -43,6 +43,12 @@ public:
 	virtual void init(const char * id, MQTTInterface *mi);
 
 	/***
+	 * Set Task to use for action
+	 * @param p
+	 */
+	virtual void setPingTask(MQTTPingTask *p);
+
+	/***
 	 * Use the interface to setup all the subscriptions
 	 * @param interface
 	 */
@@ -59,9 +65,8 @@ public:
 	virtual void route(const char *topic, size_t topicLen, const void * payload, size_t payloadLen, MQTTInterface *interface);
 
 private:
-	const char * id;
 
-	MQTTPingTask pingTask;
+	MQTTPingTask *pingTask = NULL;
 
 	char * pingTopic = NULL;
 	char * pongTopic = NULL;

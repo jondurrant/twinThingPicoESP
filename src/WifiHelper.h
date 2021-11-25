@@ -17,7 +17,7 @@
 #endif
 
 #ifndef ESP01_RST_DELAY
-#define ESP01_RST_DELAY 100
+#define ESP01_RST_DELAY 2000
 #endif
 
 #ifndef ESP01_SNTP_TIMEZONE

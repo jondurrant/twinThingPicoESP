@@ -175,7 +175,7 @@ void WifiHelper::syncRTCCB(lwespr_t resp, void * args){
 			             .year  = (int16_t)WifiHelper::dateTime.year,
 			             .month = (int8_t) WifiHelper::dateTime.month,
 			             .day   = (int8_t) WifiHelper::dateTime.date,
-			             .dotw  = ((int8_t) WifiHelper::dateTime.day) -1, // 0 is Sunday, so 5 is Friday
+			             .dotw  = ((int8_t) WifiHelper::dateTime.day) - (int8_t)1, // 0 is Sunday, so 5 is Friday
 			             .hour  = (int8_t) WifiHelper::dateTime.hours,
 			             .min   = (int8_t) WifiHelper::dateTime.minutes,
 			             .sec   = (int8_t) WifiHelper::dateTime.seconds
@@ -199,5 +199,9 @@ void WifiHelper::syncRTCCB(lwespr_t resp, void * args){
 }
 
 
+
+bool WifiHelper::isJoined(){
+	return (lwesp_sta_is_joined() == 1);
+}
 
 

@@ -62,6 +62,8 @@ public:
 
 	static bool syncRTCwithSNTP();
 
+	static bool isJoined();
+
 
 private:
 

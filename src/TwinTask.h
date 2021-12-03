@@ -53,7 +53,7 @@ public:
 	virtual void notifyState(unsigned char dirtyCode);
 
 
-private:
+protected:
 	/***
 	 * Internal function used by FreeRTOS to run the task
 	 * @param pvParameters

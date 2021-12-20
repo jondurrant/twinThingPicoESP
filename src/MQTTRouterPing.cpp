@@ -14,6 +14,7 @@
 
 #define PING "PING"
 #define PONG "PONG"
+#define ALL "ALL"
 
 
 /***
@@ -61,6 +62,18 @@ void MQTTRouterPing::init(const char * id, MQTTInterface *mi) {
 			LogError( ("Unable to allocate PONG topic") );
 		}
 	}
+
+	if (allPingTopic == NULL){
+		allPingTopic = (char *)pvPortMalloc(
+				MQTTTopicHelper::lenGroupTopic(ALL, PING)
+				);
+		if (allPingTopic != NULL){
+			MQTTTopicHelper::genGroupTopic(allPingTopic, ALL, PING);
+		} else {
+			LogError( ("Unable to allocate ALL topic") );
+		}
+	}
+
 }
 
 /***
@@ -103,6 +116,15 @@ void MQTTRouterPing::route(const char *topic, size_t topicLen, const void * payl
 			pingTask->addPing(payload, payloadLen);
 		}
 	}
+	if (strlen(allPingTopic) == topicLen){
+		if (memcmp(topic, allPingTopic, topicLen)==0){
+
+			/*
+			interface->pubToTopic(pongTopic, payload, payloadLen);
+			*/
+			pingTask->addPing(payload, payloadLen);
+		}
+	}
 }
 
 /***
@@ -112,6 +134,7 @@ void MQTTRouterPing::route(const char *topic, size_t topicLen, const void * payl
 void MQTTRouterPing::subscribe(MQTTInterface *interface){
 
 	interface->subToTopic(pingTopic, 1);
+	interface->subToTopic(allPingTopic, 1);
 }
 
 /***

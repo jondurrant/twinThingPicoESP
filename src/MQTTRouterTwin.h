@@ -52,7 +52,7 @@ public:
 	virtual void route(const char *topic, size_t topicLen, const void * payload,
 			size_t payloadLen, MQTTInterface *interface);
 
-private:
+protected:
 	TwinTask *pTwin;
 
 	char * pSetTopic = NULL;

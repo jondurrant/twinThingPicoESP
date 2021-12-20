@@ -70,6 +70,7 @@ private:
 
 	char * pingTopic = NULL;
 	char * pongTopic = NULL;
+	char * allPingTopic = NULL;
 
 };
 

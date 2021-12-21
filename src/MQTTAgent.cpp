@@ -258,14 +258,20 @@ bool MQTTAgent::pubToTopic(const char * topic, const void * payload,
 		break;
 	}
 	}
-	LogDebug( ("Publish to: %s \n", topic ));
 
-	if (pObserver != NULL){
-		pObserver->MQTTSend();
+	if (connState == Online){
+		LogDebug( ("Publish to: %s \n", topic ));
+
+		if (pObserver != NULL){
+			pObserver->MQTTSend();
+		}
+		status = lwesp_mqtt_client_api_publish(pMQTTClient, topic,
+				payload, payloadLen, q, false);
+		return (status == lwespOK);
+	} else {
+		return false;
 	}
-	status = lwesp_mqtt_client_api_publish(pMQTTClient, topic,
-			payload, payloadLen, q, false);
-	return (status == lwespOK);
+
 }
 
 /***

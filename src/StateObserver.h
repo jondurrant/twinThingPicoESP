@@ -9,6 +9,7 @@
 
 #ifndef STATEOBSERVER_H_
 #define STATEOBSERVER_H_
+#include <stdint.h>
 
 
 /***
@@ -23,7 +24,7 @@ public:
 	 * Notification of a change of a state item with the State object.
 	 * @param dirtyCode - Representation of item changed within state. Used to pull back delta
 	 */
-	virtual void notifyState(unsigned char dirtyCode)=0;
+	virtual void notifyState(uint16_t dirtyCode)=0;
 };
 
 #endif /* STATEOBSERVER_H_ */

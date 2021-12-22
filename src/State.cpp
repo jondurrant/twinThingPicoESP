@@ -148,7 +148,7 @@ bool State::isDirty() const{
  * Only 8 slots available
  * @param element
  */
-void State::setDirty(unsigned char element){
+void State::setDirty(uint16_t element){
 	if (element < 8){
 		unsigned char m = 1 << element;
 		dirty = dirty | m;

@@ -11,7 +11,7 @@
 #define STATE_H_
 
 #ifndef STATE_ELEMENTS
-#define STATE_ELEMENTS 8
+#define STATE_ELEMENTS 16
 #endif
 
 #include <stdbool.h>
@@ -126,16 +126,16 @@ protected:
 	 */
 	State(const State &other);
 
-	// List of the 8 helpder functions that will serialise the 8 elements to JSON
+	// List of the 16 helpder functions that will serialise the 16 elements to JSON
 	StateFunc jsonHelpers[STATE_ELEMENTS];
-	// Actual number of elements, must be bellow 8
+	// Actual number of elements, must be bellow 16
 	unsigned char elements = STATE_ELEMENTS;
 
 	/***
-	 * Set specific element (0 to 7) to be dirty
+	 * Set specific element (0 to 15) to be dirty
 	 * @param element
 	 */
-	void setDirty(unsigned char element);
+	void setDirty(uint16_t element);
 
 	/***
 	 * Notify all observers
@@ -153,7 +153,7 @@ protected:
 
 private:
 	//bit associated with the state element is set when changed
-	unsigned char dirty = 0;
+	uint16_t dirty = 0;
 
 	//Observer list who will be notified of change
 	std::list<StateObserver *> observers;

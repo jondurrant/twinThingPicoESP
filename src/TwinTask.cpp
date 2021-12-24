@@ -120,7 +120,7 @@ void TwinTask::run(){
 								xMsg, STATE_MAX_MSG_LEN, 0);
 			if (size > 0){
 				if (pState != NULL){
-					processJson(xMsg);
+					processMsg(xMsg);
 				}
 			}
 		}
@@ -132,7 +132,7 @@ void TwinTask::run(){
 * Process a json message received
 * @param str
 */
-void TwinTask::processJson(char *str){
+void TwinTask::processMsg(char *str){
 	json_t const* json = json_create( str, jsonBuf, jsonBufLen );
 	if ( !json ) {
 		LogError( ("json create. %s",str) );
@@ -159,7 +159,20 @@ void TwinTask::processJson(char *str){
 			mqttInterface->pubToTopic(updateTopic, xMsg, strlen(xMsg), 1);
 		}
 	}
+
+	processJson(json);
 }
+
+
+/***
+* Process a json message received
+* Extend this for subclass processing
+* @param json
+*/
+void TwinTask::processJson(json_t const* json){
+	//NOP
+}
+
 
 /***
  * Notification of a change of a state item with the State object.

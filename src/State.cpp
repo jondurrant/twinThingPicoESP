@@ -149,7 +149,7 @@ bool State::isDirty() const{
  * @param element
  */
 void State::setDirty(uint16_t element){
-	if (element < 8){
+	if (element < 16){
 		unsigned char m = 1 << element;
 		dirty = dirty | m;
 		if (! transaction){

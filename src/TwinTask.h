@@ -69,7 +69,14 @@ protected:
 	* Process a json message received
 	* @param str
 	*/
-	void processJson(char *str);
+	virtual void processMsg(char *str);
+
+	/***
+	* Process a json message received
+	* Extend this for subclass processing
+	* @param json
+	*/
+	virtual void processJson(json_t const* json);
 
 
 	MessageBufferHandle_t xMessageBuffer = NULL;

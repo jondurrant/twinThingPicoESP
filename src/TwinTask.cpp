@@ -49,13 +49,14 @@ bool TwinTask::addMessage(const char * msg, size_t msgLen){
 		size_t res = xMessageBufferSend(xMessageBuffer,
 					msg, msgLen, 0 );
 			if (res != msgLen){
-				LogError( ("addMessage failed\n") );
+				LogError( ("addMessage failed. Msg len:%d  Buf:%d Msg:%s\n", msgLen, xMessageBufferSpacesAvailable(xMessageBuffer), msg ));
 				return false;
 			}
 	} else {
 		LogError( ("No Message Buf") );
 		return false;
 	}
+	//LogDebug(("addMessage succeed(%d):%s\n", msgLen, msg));
 	return true;
 }
 

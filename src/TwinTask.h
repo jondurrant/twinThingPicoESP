@@ -20,10 +20,10 @@
 #include "tiny-json.h"
 
 #ifndef STATE_MSG_BUF_LEN
-#define STATE_MSG_BUF_LEN 512
+#define STATE_MSG_BUF_LEN 767
 #endif
 #ifndef STATE_MAX_MSG_LEN
-#define STATE_MAX_MSG_LEN 200
+#define STATE_MAX_MSG_LEN 256
 #endif
 
 class TwinTask : public StateObserver {

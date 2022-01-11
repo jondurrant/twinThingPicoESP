@@ -87,8 +87,9 @@ size_t  MQTTTopicHelper::lenGroupTopic(const char *grp, const char *name){
 	size_t res = 0;
 	res = strlen(MQTT_TOPIC_GROUP_HEADER) +
 		  strlen(grp) +
+		  strlen(MQTT_TOPIC_HEADER) +
 		  strlen(name) +
-		  4;
+		  5;
 	return res;
 }
 
@@ -99,8 +100,9 @@ size_t  MQTTTopicHelper::lenGroupTopic(const char *grp, const char *name){
  * @param name - string name of the topic
  */
 void  MQTTTopicHelper::genGroupTopic(char * topic, const char *grp, const char *name){
-	sprintf(topic, "%s/%s/%s", MQTT_TOPIC_GROUP_HEADER,
+	sprintf(topic, "%s/%s/%s/%s", MQTT_TOPIC_GROUP_HEADER,
 			grp,
+			MQTT_TOPIC_HEADER,
 			name
 			);
 }

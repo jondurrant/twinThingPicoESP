@@ -192,9 +192,10 @@ void MQTTAgent::start(UBaseType_t priority){
 			 break;
 		 }
 		 case MQTTConned: {
-			 pubToTopic(onlineTopic, ONLINEPAYLOAD, strlen(ONLINEPAYLOAD), 1);
 			 mqttSub();
 			 setConnState(Online);
+			 pubToTopic(onlineTopic, ONLINEPAYLOAD, strlen(ONLINEPAYLOAD), 1);
+
 			 break;
 		 }
 		 case MQTTRecon: {

@@ -18,7 +18,7 @@
 #include <list>
 
 #include "tiny-json.h"
-
+#include "MQTTConfig.h"
 #include "StateObserver.h"
 
 //Declaration for State function that will be used as array of member functions in class
@@ -62,7 +62,7 @@ public:
 	 * @param dirtyCode - dirtyCode which shows which elements changed.
 	 * @return
 	 */
-	virtual unsigned int delta(char *buf, unsigned int len, unsigned char dirtyCode) ;
+	virtual unsigned int delta(char *buf, unsigned int len, uint16_t dirtyCode) ;
 
 	/***
 	 * Retrieve state of object in JSON format
@@ -129,7 +129,7 @@ protected:
 	// List of the 16 helpder functions that will serialise the 16 elements to JSON
 	StateFunc jsonHelpers[STATE_ELEMENTS];
 	// Actual number of elements, must be bellow 16
-	unsigned char elements = STATE_ELEMENTS;
+	uint16_t elements = STATE_ELEMENTS;
 
 	/***
 	 * Set specific element (0 to 15) to be dirty

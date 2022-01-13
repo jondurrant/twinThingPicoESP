@@ -19,7 +19,7 @@
  * Constructor
  */
 State::State() {
-	for (unsigned char i = 0 ; i < elements; i++){
+	for (uint16_t i = 0 ; i < elements; i++){
 		jsonHelpers[i] = NULL;
 	}
 	elements=1;
@@ -61,7 +61,7 @@ unsigned int State::delta(char *buf, unsigned int len) {
  * @param dirtyCode - code representing the items changed
  * @return length of json or 0 if we exceeded buffer
  */
-unsigned int State::delta(char *buf, unsigned int len, unsigned char dirtyCode){
+unsigned int State::delta(char *buf, unsigned int len, uint16_t dirtyCode){
 	char *p = buf;
 	size_t l = len;
 
@@ -72,9 +72,9 @@ unsigned int State::delta(char *buf, unsigned int len, unsigned char dirtyCode){
 	p = json_objOpen( p, NULL, &l );
 	p = json_objOpen( p, TWINDELTA, &l );
 
-	unsigned char m = 0;
+	uint16_t m = 0;
 
-	for (unsigned char i = 0 ; i < elements; i++){
+	for (uint16_t i = 0 ; i < elements; i++){
 		m = 1 << i;
 		if (m & dirtyCode){
 			if (jsonHelpers[i] != NULL) {
@@ -110,7 +110,7 @@ unsigned int State::state(char *buf, unsigned int len) {
 	p = json_objOpen( p, NULL, &l );
 	p = json_objOpen( p, TWINSTATE, &l );
 
-	for (unsigned char i = 0 ; i < elements; i++){
+	for (uint16_t i = 0 ; i < elements; i++){
 		if (jsonHelpers[i] != NULL) {
 			p = (this->*jsonHelpers[i])(p, len - (p - buf));
 		}
@@ -150,7 +150,7 @@ bool State::isDirty() const{
  */
 void State::setDirty(uint16_t element){
 	if (element < 16){
-		unsigned char m = 1 << element;
+		uint16_t m = 1 << element;
 		dirty = dirty | m;
 		if (! transaction){
 			notifyObservers();
@@ -202,6 +202,8 @@ void State::commitTransaction(){
 	transaction = false;
 	if (isDirty()){
 		notifyObservers();
+	} else {
+		LogInfo(("Transaction completed with no change to state"));
 	}
 }
 

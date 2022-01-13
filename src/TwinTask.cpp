@@ -162,6 +162,17 @@ void TwinTask::processMsg(char *str){
 	}
 
 	processJson(json);
+
+	if (pState != NULL){
+		if (pState->isDirty()){
+			LogDebug(("State is dirty so sending delta"));
+			pState->delta(xMsg, STATE_MAX_MSG_LEN);
+			mqttInterface->pubToTopic(updateTopic, xMsg, strlen(xMsg), 1);
+		}
+		else {
+			LogDebug(("State clean after processing json"));
+		}
+	}
 }
 
 
@@ -179,7 +190,7 @@ void TwinTask::processJson(json_t const* json){
  * Notification of a change of a state item with the State object.
  * @param dirtyCode - Representation of item changed within state. Used to pull back delta
  */
-void TwinTask::notifyState(unsigned char dirtyCode){
+void TwinTask::notifyState(uint16_t dirtyCode){
 	if (mqttInterface != NULL){
 		unsigned int i;
 

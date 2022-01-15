@@ -136,10 +136,11 @@ void MQTTAgent::credentials(const char * user, const char * passwd, const char *
  * @param ssl - unused
  * @return
  */
-bool MQTTAgent::connect(char * target, lwesp_port_t  port, bool recon){
+bool MQTTAgent::connect(char * target, lwesp_port_t  port, bool recon, bool ssl){
 	this->target = target;
 	this->port = port;
 	this->recon = recon;
+	this->ssl = ssl;
 	setConnState(MQTTConn);
 	return true;
 }
@@ -332,6 +333,9 @@ bool MQTTAgent::mqttConn(){
 	xMqttClientInfo.will_topic = willTopic;
 	xMqttClientInfo.will_message = WILLPAYLOAD;
 	xMqttClientInfo.will_qos = LWESP_MQTT_QOS_AT_LEAST_ONCE;
+#ifdef LWESPFORK
+	xMqttClientInfo.ssl = this->ssl;
+#endif
 
 	conn_status = lwesp_mqtt_client_api_connect(pMQTTClient,
 			target, port, &xMqttClientInfo);

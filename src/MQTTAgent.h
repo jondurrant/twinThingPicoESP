@@ -60,7 +60,7 @@ public:
 	 * @param recon - reconnect on disconnect
 	 * @return
 	 */
-	 bool connect(char * target, lwesp_port_t  port, bool recon=false);
+	 bool connect(char * target, lwesp_port_t  port, bool recon=false, bool ssl=false);
 
 	 /***
 	 *  create the vtask, will get picked up by scheduler
@@ -182,6 +182,7 @@ private:
 	const char * target = NULL;
 	lwesp_port_t port = 1883 ;
 	bool recon = false;
+	bool ssl = false;
 
 	//Router object used for message processing
 	MQTTRouter * pRouter = NULL;

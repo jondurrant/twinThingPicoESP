@@ -42,6 +42,9 @@ public:
 	 */
 	static bool connectToAp(const char * sid, const char *passwd);
 
+
+	static bool autoJoinOrConfig();
+
 	/***
 	 * Get IP address of unit
 	 * @param ip - output uint8_t[4]

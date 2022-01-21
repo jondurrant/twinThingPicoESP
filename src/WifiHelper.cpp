@@ -14,6 +14,9 @@
 #include "pico/stdlib.h"
 #include "pico/util/datetime.h"
 
+#include "FreeRTOS.h"
+#include "task.h"
+
 lwesp_datetime_t WifiHelper::dateTime;
 
 WifiHelper::WifiHelper() {
@@ -56,6 +59,10 @@ bool WifiHelper::connectToAp(const char * sid, const char *passwd){
 		if (lwesp_sta_join(sid, passwd, NULL, NULL, NULL, 1) == lwespOK) {
 
 			 LogInfo(("Connected to %s network!", sid));
+
+			 //enable autorejoin
+			LogDebug(("Autojoin %d", lwesp_sta_autojoin(1, NULL, NULL, 1) ));
+
 		 } else {
 			 LogError(("Connection error: %d", (int)eres));
 			 return false;
@@ -205,3 +212,35 @@ bool WifiHelper::isJoined(){
 }
 
 
+
+bool WifiHelper::autoJoinOrConfig(){
+	lwespr_t eres;
+	char ipStr[16];
+
+	/* Initialize ESP with default callback function */
+	//LogInfo(("Initializing LwESP"));
+	printf("Initializing LwESP\r\n");
+	WifiHelper::setupGPIO();
+
+	if (lwesp_init(NULL, 1) != lwespOK) {
+		LogInfo(("First inilialize failed, h/w resetting"));
+		WifiHelper::resetESP01();
+		if (lwesp_init(NULL, 1) != lwespOK) {
+			LogError(("Cannot initialize LwESP!"));
+			return false;
+		}
+	}
+
+	LogInfo(("LwESP initialized!"));
+
+
+	LogDebug(("Autojoin %d", lwesp_sta_autojoin(1, NULL, NULL, 1) ));
+
+	while (!WifiHelper::isJoined()){
+		vTaskDelay(5000);
+		LogInfo(("Wait for autojoin"));
+	}
+
+	return true;
+
+}

@@ -29,6 +29,10 @@ void TwinTask::setStateObject(State *state){
 	pState->attach(this);
 }
 
+State *TwinTask::getStateObject(){
+	return pState;
+}
+
 
 void TwinTask::setMQTTInterface(MQTTInterface *mi){
 	mqttInterface = mi;

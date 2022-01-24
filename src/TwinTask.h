@@ -32,6 +32,7 @@ public:
 	virtual ~TwinTask();
 
 	void setStateObject(State *state);
+	State *getStateObject();
 	void setMQTTInterface(MQTTInterface *mi);
 	bool addMessage(const char * msg, size_t msgLen);
 

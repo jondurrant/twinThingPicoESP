@@ -333,9 +333,9 @@ bool MQTTAgent::mqttConn(){
 	xMqttClientInfo.will_topic = willTopic;
 	xMqttClientInfo.will_message = WILLPAYLOAD;
 	xMqttClientInfo.will_qos = LWESP_MQTT_QOS_AT_LEAST_ONCE;
-#ifdef LWESPFORK
+
 	xMqttClientInfo.ssl = this->ssl;
-#endif
+
 
 	conn_status = lwesp_mqtt_client_api_connect(pMQTTClient,
 			target, port, &xMqttClientInfo);

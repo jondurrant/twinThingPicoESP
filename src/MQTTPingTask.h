@@ -70,6 +70,12 @@ public:
 	 */
 	bool addPing(const void * payload, size_t payloadLen);
 
+	/***
+	 * Get the FreeRTOS task being used
+	 * @return
+	 */
+	virtual TaskHandle_t getTask();
+
 protected:
 	/***
 	 * Internal function to run the task from within the object

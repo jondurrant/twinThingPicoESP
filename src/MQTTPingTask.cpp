@@ -124,3 +124,11 @@ void MQTTPingTask::run(){
 	}
 
 }
+
+/***
+* Get the FreeRTOS task being used
+* @return
+*/
+TaskHandle_t MQTTPingTask::getTask(){
+	return xHandle;
+}

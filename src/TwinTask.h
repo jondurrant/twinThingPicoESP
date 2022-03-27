@@ -53,6 +53,11 @@ public:
 	 */
 	virtual void notifyState(uint16_t dirtyCode);
 
+	/***
+	 * Get the FreeRTOS task being used
+	 * @return
+	 */
+	virtual TaskHandle_t getTask();
 
 protected:
 	/***

@@ -205,3 +205,12 @@ void TwinTask::notifyState(uint16_t dirtyCode){
 		mqttInterface->pubToTopic(updateTopic, xMsg, strlen(xMsg));
 	}
 }
+
+
+/***
+* Get the FreeRTOS task being used
+* @return
+*/
+TaskHandle_t TwinTask::getTask(){
+	return xHandle;
+}
